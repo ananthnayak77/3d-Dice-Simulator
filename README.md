@@ -1,4 +1,4 @@
-# 3d-Dice-Simulator     //wait a while still under progress yet to be deployed on Vercel 
+# 3D-Dice-Simulator     //wait a while still under progress yet to be deployed on Vercel 
 this is basically my skill test game developed by me which mainly roles out the 3d dice and tracks your target score 
 🎲 Interactive 3D Dice Simulator
 
