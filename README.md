@@ -19,7 +19,7 @@ The project is deliberately built without a 3D rendering library: the dice effec
 
 > Add the deployed Vercel frontend URL here once available.
 
-**[Open the live demo](PASTE_YOUR_VERCEL_LINK_HERE)**
+**[Open the live demo](https://vercel.com/m-ananth-nayak/3d-dice-simulator/4CjWJLJhDtQL11gWzq4Kk4Z8Dkgr)**
 
 ## 🧩 How It Works
 
@@ -182,7 +182,7 @@ Built as an exploration of interactive browser interfaces, CSS 3D transforms, an
 A modern, responsive full-stack web application that allows users to play an interactive dice game. Users can set their own custom rules (maximum rolls and target scores) and watch a custom-built 3D dice tumble dynamically in real-time.
 
 ## 🚀 Live Demo
-*Check out the live frontend interface deployed here:* **[PASTE YOUR VERCEL LINK HERE]**
+*Check out the live frontend interface deployed here:* **https://vercel.com/m-ananth-nayak/3d-dice-simulator/4CjWJLJhDtQL11gWzq4Kk4Z8Dkgr**
 
 ## 🛠️ Project Architecture & Files
 This repository contains the complete evolutionary code for the game:
