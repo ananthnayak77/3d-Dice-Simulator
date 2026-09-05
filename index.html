@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dice Simulator Game</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #ffffff;
+            color: #1e293b;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .game-card {
+            background: #1e293b;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            padding: 2.5rem;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            width: 100%;
+            max-width: 420px;
+            text-align: center;
+            color: #f8fafc;
+        }
+        h2 { margin-top: 0; font-size: 1.8rem; color: #38bdf8; letter-spacing: 0.5px; }
+        .input-group { margin-bottom: 1.25rem; text-align: left; }
+        label { display: block; margin-bottom: 0.5rem; font-size: 0.85rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; }
+        input { width: 100%; padding: 0.75rem; background: #0f172a; border: 1px solid #334155; border-radius: 8px; color: #fff; font-size: 1rem; box-sizing: border-box; }
+        .btn-start { width: 100%; padding: 0.85rem; background: linear-gradient(135deg, #f97316, #ea580c); border: none; border-radius: 8px; color: white; font-size: 1rem; font-weight: 600; cursor: pointer; margin-top: 0.5rem; }
+        .dice-scene { width: 100px; height: 100px; margin: 30px auto; perspective: 600px; }
+        .cube { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; transition: transform 1.2s cubic-bezier(0.2, 0.8, 0.3, 1); cursor: pointer; }
+        .cube-face { position: absolute; width: 100px; height: 100px; border: 2px solid #cbd5e1; background: #ffffff; border-radius: 12px; display: flex; justify-content: center; align-items: center; font-size: 2.5rem; font-weight: bold; color: #0f172a; box-shadow: inset 0 0 15px rgba(0,0,0,0.1); box-sizing: border-box; }
+        .face-1 { transform: rotateY(0deg) translateZ(50px); }
+        .face-2 { transform: rotateY(90deg) translateZ(50px); }
+        .face-3 { transform: rotateX(90deg) translateZ(50px); }
+        .face-4 { transform: rotateX(-90deg) translateZ(50px); }
+        .face-5 { transform: rotateY(-90deg) translateZ(50px); }
+        .face-6 { transform: rotateY(180deg) translateZ(50px); }
+        .show-1 { transform: rotateX(0deg) rotateY(0deg); }
+        .show-2 { transform: rotateX(0deg) rotateY(-90deg); }
+        .show-3 { transform: rotateX(-90deg) rotateY(0deg); }
+        .show-4 { transform: rotateX(90deg) rotateY(0deg); }
+        .show-5 { transform: rotateX(0deg) rotateY(90deg); }
+        .show-6 { transform: rotateX(180deg) rotateY(0deg); }
+        #output { margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid #334155; text-align: left; max-height: 200px; overflow-y: auto; }
+        .round { background: #0f172a; padding: 0.6rem 0.8rem; border-radius: 6px; margin-bottom: 0.5rem; font-size: 0.9rem; border-left: 4px solid #38bdf8; color: #f8fafc; }
+        .final-msg { padding: 0.75rem; border-radius: 8px; margin-top: 1rem; text-align: center; font-weight: bold; border: 1px solid; }
+    </style>
+</head>
+<body>
+    <div class="game-card">
+        <h2>🎲 Dice Simulator</h2>
+        <div id="setup-area">
+            <div class="input-group"><label for="rounds">Max Rolls Allowed:</label><input type="number" id="rounds" value="5"></div>
+            <div class="input-group"><label for="target">Target Score to Win:</label><input type="number" id="target" value="20"></div>
+            <button class="btn-start" onclick="initGame()">Set Game Parameters</button>
+        </div>
+        <div id="gameplay-area" style="display: none; margin-top: 20px;">
+            <div style="font-size: 1.1rem; margin-bottom: 15px; color: #cbd5e1;">
+                Rolls Left: <span id="stat-rolls" style="color: #f97316; font-weight: bold;">0</span> | 
+                Score: <span id="stat-score" style="color: #38bdf8; font-weight: bold;">0</span> / <span id="target-display" style="color: #38bdf8;">0</span>
+            </div>
+            <div class="dice-scene" onclick="rollSingleDice()">
+                <div class="cube show-1" id="cube-dice">
+                    <div class="cube-face face-1">⚀</div>
+                    <div class="cube-face face-2">⚁</div>
+                    <div class="cube-face face-3">⚂</div>
+                    <div class="cube-face face-4">⚃</div>
+                    <div class="cube-face face-5">⚄</div>
+                    <div class="cube-face face-6">⚅</div>
+                </div>
+            </div>
+            <p style="color: #94a3b8; font-size: 0.85rem; margin-top: -10px;">Click the 3D cube to spin & roll!</p>
+        </div>
+        <div id="output"></div>
+    </div>
+    <script>
+        let totalScore = 0;
+        let maxRounds = 0;
+        let currentRound = 0;
+        let targetScore = 0;
+        let isGameOver = false;
+        let isSpinning = false;
+
+        function initGame() {
+            maxRounds = parseInt(document.getElementById('rounds').value) || 5;
+            targetScore = parseInt(document.getElementById('target').value) || 20;
+            totalScore = 0;
+            currentRound = 0;
+            isGameOver = false;
+            isSpinning = false;
+            document.getElementById('stat-rolls').innerText = maxRounds;
+            document.getElementById('stat-score').innerText = totalScore;
+            document.getElementById('target-display').innerText = targetScore;
+            document.getElementById('output').innerHTML = "";
+            document.getElementById('cube-dice').className = 'cube show-1';
+            document.getElementById('setup-area').style.display = 'none';
+            document.getElementById('gameplay-area').style.display = 'block';
+        }
+
+        function rollSingleDice() {
+            if (isGameOver || isSpinning) return;
+            isSpinning = true;
+            currentRound++;
+            const roll = Math.floor(Math.random() * 6) + 1;
+            totalScore += roll;
+            const cube = document.getElementById('cube-dice');
+            const randX = Math.floor(Math.random() * 4) * 90 + 360;
+            const randY = Math.floor(Math.random() * 4) * 90 + 360;
+            cube.style.transition = 'transform 1.2s cubic-bezier(0.2, 0.8, 0.3, 1)';
+            cube.style.transform = `rotateX(${randX}deg) rotateY(${randY}deg)`;
+
+            setTimeout(() => {
+                cube.style.transition = 'none';
+                cube.style.transform = ''; 
+                cube.className = `cube show-${roll}`; 
+                document.getElementById('stat-rolls').innerText = maxRounds - currentRound;
+                document.getElementById('stat-score').innerText = totalScore;
+                const output = document.getElementById('output');
+                output.innerHTML += `<div class="round">Roll #${currentRound}: You rolled a <strong>${roll}</strong>!</div>`;
+                output.scrollTop = output.scrollHeight; 
+                isSpinning = false;
+
+                if (totalScore >= targetScore) {
+                    output.innerHTML += `<div class="final-msg" style="color: #22c55e; background: rgba(34, 197, 94, 0.1); border-color: rgba(34, 197, 94, 0.2);">🎉 CONGRATULATIONS !!! YOU WON!</div>`;
+                    endGame("CONGRATULATIONS !!! YOU WON game over! Would you like to play again?");
+                } else if (currentRound >= maxRounds) {
+                    output.innerHTML += `<div class="final-msg" style="color: #ef4444; background: rgba(239, 68, 68, 0.1); border-color: rgba(239, 68, 68, 0.2);">❌ OOPS !!! YOU LOSE!</div>`;
+                    endGame("OOPS !!! YOU LOSE game over! Would you like to play again?");
+                }
+            }, 1200);
+        }
+
+        function endGame(alertMessage) {
+            isGameOver = true;
+            setTimeout(() => {
+                if (confirm(alertMessage)) {
+                    document.getElementById('setup-area').style.display = 'block';
+                    document.getElementById('gameplay-area').style.display = 'none';
+                }
+            }, 600);
+        }
+    </script>
+</body>
+</html>
