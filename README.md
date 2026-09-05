@@ -62,7 +62,7 @@ The project is deliberately built without a 3D rendering library: the dice effec
 ### 1. Clone the repository
 
 ```bash
-git clone <YOUR_REPOSITORY_URL>
+git clone <https://github.com/ananthnayak77/3d-Dice-Simulator>
 cd interactive-3d-dice-simulator-a-modern
 ```
 
