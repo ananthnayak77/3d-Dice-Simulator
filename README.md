@@ -17,7 +17,7 @@ The project is deliberately built without a 3D rendering library: the dice effec
 
 ## 🚀 Live Demo
 
-> Add the deployed Vercel frontend URL here once available.
+
 
 **[Open the live demo](https://vercel.com/m-ananth-nayak/3d-dice-simulator/4CjWJLJhDtQL11gWzq4Kk4Z8Dkgr)**
 
