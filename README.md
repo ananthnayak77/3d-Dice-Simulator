@@ -1,7 +1,7 @@
 # 3D-Dice-Simulator     
+this is not any big project this project is designed by me for just to check my own skills 
 
-
-this is basically my skill test game developed by me which mainly roles out the 3d dice and tracks your target score 
+this is basically my skill test game developed by me which mainly roles out the 3d dice and tracks your target score I can say it's just a luck based game 
 🎲 Interactive 3D Dice Simulator
 
 A modern, responsive dice game built with a lightweight Flask API and a custom CSS-powered 3D die. Configure a target score and a roll limit, then watch the die tumble in real time as the game tracks every roll, your running total, and the remaining attempts.
